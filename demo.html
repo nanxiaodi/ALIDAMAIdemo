@@ -9,9 +9,9 @@
   <body>
     <div id="ad" style="width:1125px;height:375px;overflow:hidden">
         <!-- 请自行添加canvas元素 -->
-        <canvas style="width:120px;height:120px;position: absolute;" id="logo">
+        <img style="width:120px;height:120px;position: absolute;" id="logo">
 
-        </canvas>
+        </img>
     </div>
 
     <script>
@@ -20,32 +20,25 @@
         //创建image对象
         var imgObj = new Image();
         var cvsNum;
-        imgObj.src = adImage;
         imgObj.onload = function(){
+          // 判断X轴上所需cvs数量
           if(imgObj.width > 200) {
-            var widthNum = Math.ceil(imgObj.width/200);
-            var lastCvsWidth = imgObj.width%200;
-            if(!lastCvsWidth) {
-              lastCvsWidth = 200;
+            var XNum = Math.ceil(imgObj.width/200);
+            var lastXCvsWidth = imgObj.width%200;
+            if(!lastXCvsWidth) {
+              lastXCvsWidth = 200;
             }
-          }else {
-              var widthNum  = 1;
-              var lastCvsWidth = imgObj.width;
-          };
-
+          }
+          // Y轴上所需cvs数量
           if(imgObj.height > 200) {
-              var heightNum = Math.ceil(imgObj.height/200);
-              var lastCvsHeight = imgObj.height%200;
-               if(!lastCvsHeight) {
-                  lastCvsHeight = 200;
+              var YNum = Math.ceil(imgObj.height/200);
+              var lastYCvsHeight = imgObj.height%200;
+               if(!lastYCvsHeight) {
+                  lastYCvsHeight = 200;
                 }
-          }else {
-              var heightNum = 1;
-              var lastCvsHeight = imgObj.height;
-          };
-
-          cvsNum = widthNum*heightNum;
-
+          }
+          cvsNum = XNum*YNum;
+          // 循环出所需cvs
           for(var i=0;i<cvsNum; i++) {
             var cvs = document.createElement('canvas');
             cvs.style.display = "block";
@@ -53,44 +46,20 @@
             var ctx = cvs.getContext('2d');
             cvs.height = 200;
             cvs.width = 200;
-             if(i === widthNum-1) {
-                  cvs.width = lastCvsWidth;
-               }
-
-            if(i < widthNum) {
-              if(i === widthNum-1) {
-                  cvs.width = lastCvsWidth;
-                  ctx.drawImage(this,i*200,0,lastCvsWidth,200,0,0,lastCvsWidth,200);
-               }else {
-                 ctx.drawImage(this,i*200,0,200,200,0,0,200,200);
-               }
-
-            }else {
-              if((i+1)%widthNum === 0) {
-                  cvs.width = lastCvsWidth;
-                  ctx.drawImage(this,(i%widthNum)*200,parseInt(i/widthNum)*200,lastCvsWidth,200,0,0,lastCvsWidth,200);
-               }else {
-                  console.log((i-widthNum)*200,parseInt(i/widthNum)*200,200,200,0,0,200,200)
-                  ctx.drawImage(this,(i%widthNum)*200,parseInt(i/widthNum)*200,200,200,0,0,200,200);
-               }
-
-
-            };
-
+            if((i+1)%XNum === 0) {
+                cvs.width = lastXCvsWidth;
+                ctx.drawImage(this,(i%XNum)*200,parseInt(i/XNum)*200,lastXCvsWidth,200,0,0,lastXCvsWidth,200);
+             }else {
+                ctx.drawImage(this,(i%XNum)*200,parseInt(i/XNum)*200,200,200,0,0,200,200);
+             }
             $container.appendChild(cvs)
           }
         }
+        //附上图片链接
+         imgObj.src = adImage;
         //----- 实现logo左上角
-        var logoImgObj = new Image();
-        logoImgObj.src = logoImage;
-        var logoCvs =  document.getElementById('logo');
-        logoCvs.width = 120;
-        logoCvs.height = 120;
-        logoImgObj.onload = function() {
-          var logoCtx = logoCvs.getContext('2d');
-          logoCtx.drawImage(this,0,0,120,120,0,0,120,120);
-        }
-
+        var logoImg =  document.getElementById('logo');
+        logoImg.src = logoImage;
       }
         const $ad = document.getElementById('ad');
         const adImage = 'https://img.alicdn.com/tfs/TB15CKcfkyWBuNjy0FpXXassXXa-1125-375.jpg';
